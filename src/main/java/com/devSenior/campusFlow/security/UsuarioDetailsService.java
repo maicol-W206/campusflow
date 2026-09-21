@@ -22,10 +22,6 @@ public class UsuarioDetailsService implements UserDetailsService {
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
-        if (usuario.getRol() == null || usuario.getPassword() == null) {
-            throw new UsernameNotFoundException("Usuario sin credenciales completas");
-        }
-
         return User.withUsername(usuario.getEmail())
                 .password(usuario.getPassword())
                 .roles(usuario.getRol().name())

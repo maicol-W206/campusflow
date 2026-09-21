@@ -4,7 +4,6 @@ import com.devSenior.campusFlow.usuarios.dto.AuthResponse;
 import com.devSenior.campusFlow.usuarios.dto.LoginRequest;
 import com.devSenior.campusFlow.usuarios.dto.RegistroRequest;
 import com.devSenior.campusFlow.usuarios.service.AuthService;
-import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,12 +20,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public AuthResponse register(@Valid @RequestBody RegistroRequest request) {
+    public AuthResponse register(@RequestBody RegistroRequest request) {
         return authService.registrar(request);
     }
 
     @PostMapping("/login")
-    public AuthResponse login(@Valid @RequestBody LoginRequest request) {
+    public AuthResponse login(@RequestBody LoginRequest request) {
         return authService.login(request);
     }
 }

@@ -10,8 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
-import io.jsonwebtoken.JwtException;
-import org.springframework.security.core.AuthenticationException;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -39,25 +37,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String token = header.substring(7);
 
-        if (SecurityContextHolder.getContext().getAuthentication() == null) {
-            try {
-                String email = jwtService.extraerEmail(token);
-                if (email == null || email.isBlank()) {
-                    throw new IllegalArgumentException("Token sin identidad");
-                }
-                UserDetails userDetails = usuarioDetailsService.loadUserByUsername(email);
-                UsernamePasswordAuthenticationToken auth =
-                        new UsernamePasswordAuthenticationToken(
-                                userDetails, null, userDetails.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            } catch (JwtException | IllegalArgumentException | AuthenticationException ex) {
-                SecurityContextHolder.clearContext();
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                response.getWriter().write("{\"error\":\"Token inválido o usuario no disponible\"}");
-                return;
-            }
+        if (jwtService.esValido(token)
+                && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+            String email = jwtService.extraerEmail(token);
+            UserDetails userDetails = usuarioDetailsService.loadUserByUsername(email);
+
+            UsernamePasswordAuthenticationToken auth =
+                    new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+
+            SecurityContextHolder.getContext().setAuthentication(auth);
         }
 
         filterChain.doFilter(request, response);

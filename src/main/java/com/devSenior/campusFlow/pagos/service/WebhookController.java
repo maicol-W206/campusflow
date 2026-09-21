@@ -1,4 +1,4 @@
-package com.devSenior.campusFlow.usuarios.controller;
+package com.devSenior.campusFlow.pagos.service;
 
 import com.stripe.exception.SignatureVerificationException;
 import com.devSenior.campusFlow.pagos.service.WebhookService;

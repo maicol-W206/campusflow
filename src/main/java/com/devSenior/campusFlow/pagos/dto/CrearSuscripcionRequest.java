@@ -15,5 +15,4 @@ public class CrearSuscripcionRequest {
     public void setPlan(PlanSuscripcion plan) {
         this.plan = plan;
     }
-
 }

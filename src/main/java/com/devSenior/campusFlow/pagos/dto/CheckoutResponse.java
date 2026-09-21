@@ -11,5 +11,4 @@ public class CheckoutResponse {
     public String getUrl() {
         return url;
     }
-
 }

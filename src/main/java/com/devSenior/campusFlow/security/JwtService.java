@@ -6,17 +6,12 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.util.Date;
-import io.jsonwebtoken.io.Decoders;
-import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class JwtService {
 
-    private final SecretKey clave;
-
-    public JwtService(@Value("${JWT_SECRET}") String secretoBase64) {
-        this.clave = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretoBase64));
-    }
+    private final SecretKey clave = Keys.hmacShaKeyFor(
+            "clave-secreta-campusflow-cambiar-en-produccion-2026".getBytes());
 
     private final long expiracionMs = 1000 * 60 * 60; // 1 hora
 

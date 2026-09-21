@@ -27,37 +27,17 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/pagos/webhook").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/cursos/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/cursos").hasAnyRole("INSTRUCTOR", "ADMINISTRADOR")
+                        .requestMatchers(HttpMethod.POST, "/api/cursos")
+                        .hasAnyRole("INSTRUCTOR", "ADMINISTRADOR")
                         .requestMatchers("/api/usuarios/**").hasRole("ADMINISTRADOR")
                         .anyRequest().authenticated()
-                )
-                .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint((request, response, error) -> {
-                            response.setStatus(401);
-                            response.setContentType("application/json");
-                            response.setCharacterEncoding("UTF-8");
-                            response.getWriter().write("{\"error\":\"Autenticación requerida\"}");
-                        })
-                        .accessDeniedHandler((request, response, error) -> {
-                            response.setStatus(403);
-                            response.setContentType("application/json");
-                            response.setCharacterEncoding("UTF-8");
-                            response.getWriter().write("{\"error\":\"Permisos insuficientes\"}");
-                        })
                 )
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-    }
-
-    @Bean
-    public org.springframework.boot.web.servlet.FilterRegistrationBean<JwtAuthFilter> registroJwt(
-            JwtAuthFilter filter) {
-        var registro = new org.springframework.boot.web.servlet.FilterRegistrationBean<>(filter);
-        registro.setEnabled(false);
-        return registro;
     }
 
     @Bean
